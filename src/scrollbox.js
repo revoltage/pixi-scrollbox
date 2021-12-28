@@ -1,4 +1,7 @@
-import * as PIXI from 'pixi.js'
+import { Ticker } from '@pixi/ticker';
+import { Container } from '@pixi/display';
+import { Graphics } from '@pixi/graphics';
+import { InteractionEvent } from '@pixi/interaction';
 import { Viewport } from 'pixi-viewport'
 import Penner from 'penner'
 
@@ -26,7 +29,7 @@ const scrollboxOptions = {
 /**
  * pixi.js scrollbox: a masked content box that can scroll vertically or horizontally with scrollbars
  */
-export class Scrollbox extends PIXI.Container {
+export class Scrollbox extends Container {
     /**
      * create a scrollbox
      * @param {object} options
@@ -45,15 +48,15 @@ export class Scrollbox extends PIXI.Container {
      * @param {number} [options.scrollbarForeground=0x888888] foreground color of scrollbar
      * @param {number} [options.scrollbarForegroundAlpha=1] alpha of foreground of scrollbar
      * @param {string} [options.underflow=top-left] what to do when content underflows the scrollbox size: none: do nothing; (left/right/center AND top/bottom/center); OR center (e.g., 'top-left', 'center', 'none', 'bottomright')
-     * @param {boolean} [options.noTicker] do not use PIXI.Ticker (for fade to work properly you will need to manually call updateLoop(elapsed) on each frame)
-     * @param {PIXI.Ticker} [options.ticker=PIXI.Ticker.shared] use this PIXI.Ticker for updates
+     * @param {boolean} [options.noTicker] do not use Ticker (for fade to work properly you will need to manually call updateLoop(elapsed) on each frame)
+     * @param {Ticker} [options.ticker=Ticker.shared] use this Ticker for updates
      * @param {boolean} [options.fade] fade the scrollbar when not in use
      * @param {number} [options.fadeScrollbarTime=1000] time to fade scrollbar if options.fade is set
      * @param {number} [options.fadeScrollboxWait=3000] time to wait before fading the scrollbar if options.fade is set
      * @param {(string|function)} [options.fadeScrollboxEase=easeInOutSine] easing function to use for fading
      * @param {boolean} [options.passiveWheel=false] whether wheel events are propogated beyond the scrollbox (NOTE: default is now false)
      * @param {boolean} [options.clampWheel=true] wheel events should be clamped (to avoid weird bounce with mouse wheel)
-     * @param {PIXI.InteractionManager} [options.interaction] InteractionManager, available from instantiated PIXI.Renderer.plugins.interaction - used to calculate pointer postion relative to canvas location on screen
+     * @param {InteractionManager} [options.interaction] InteractionManager, available from instantiated Renderer.plugins.interaction - used to calculate pointer postion relative to canvas location on screen
      * @param {HTMLElement} [options.divWheel] the HTMLElement to use for wheel interactions
      */
     constructor(options = {}) {
@@ -81,7 +84,7 @@ export class Scrollbox extends PIXI.Container {
             .decelerate()
             .on('moved', () => this._drawScrollbars())
 
-        // needed to pull this out of viewportOptions because of pixi.js v4 support (which changed from PIXI.ticker.shared to PIXI.Ticker.shared...sigh)
+        // needed to pull this out of viewportOptions because of pixi.js v4 support (which changed from ticker.shared to Ticker.shared...sigh)
         if (options.ticker) {
             this.options.ticker = options.ticker
         }
@@ -90,20 +93,15 @@ export class Scrollbox extends PIXI.Container {
             // from here: https://github.com/pixijs/pixi.js/issues/5757
             let ticker
             const pixiNS = PIXI
-            if (parseInt(/^(\d+)\./.exec(PIXI.VERSION)[1]) < 5) {
-                ticker = pixiNS.ticker.shared
-            }
-            else {
-                ticker = pixiNS.Ticker.shared
-            }
+            ticker = pixiNS.Ticker.shared
             this.options.ticker = options.ticker || ticker
         }
 
         /**
          * graphics element for drawing the scrollbars
-         * @type {PIXI.Graphics}
+         * @type {Graphics}
          */
-        this.scrollbar = this.addChild(new PIXI.Graphics())
+        this.scrollbar = this.addChild(new Graphics())
         this.scrollbar.interactive = true
         this.scrollbar.on('pointerdown', this.scrollbarDown, this)
         this.interactive = true
@@ -111,7 +109,7 @@ export class Scrollbox extends PIXI.Container {
         this.on('pointerup', this.scrollbarUp, this)
         this.on('pointercancel', this.scrollbarUp, this)
         this.on('pointerupoutside', this.scrollbarUp, this)
-        this._maskContent = this.addChild(new PIXI.Graphics())
+        this._maskContent = this.addChild(new Graphics())
         this.update()
 
         if (!this.options.noTicker) {
@@ -401,7 +399,7 @@ export class Scrollbox extends PIXI.Container {
                 .drawRect(this.scrollbarLeft, this.boxHeight - this.scrollbarSize + this.options.scrollbarOffsetHorizontal, this.scrollbarWidth, this.scrollbarSize)
                 .endFill()
         }
-        // this.content.forceHitArea = new PIXI.Rectangle(0, 0 , this.boxWidth, this.boxHeight)
+        // this.content.forceHitArea = new Rectangle(0, 0 , this.boxWidth, this.boxHeight)
         this.activateFade()
     }
 
@@ -486,7 +484,7 @@ export class Scrollbox extends PIXI.Container {
 
     /**
      * handle pointer down on scrollbar
-     * @param {PIXI.interaction.InteractionEvent} e
+     * @param {InteractionEvent} e
      * @private
      */
     scrollbarDown(e) {
@@ -537,7 +535,7 @@ export class Scrollbox extends PIXI.Container {
 
     /**
      * handle pointer move on scrollbar
-     * @param {PIXI.interaction.InteractionEvent} e
+     * @param {InteractionEvent} e
      * @private
      */
     scrollbarMove(e) {
