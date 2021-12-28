@@ -1,4 +1,7 @@
-import * as PIXI from 'pixi.js'
+import { Container } from '@pixi/display'
+import { Graphics } from '@pixi/graphics'
+import { InteractionEvent } from '@pixi/interaction'
+import { Ticker } from '@pixi/ticker'
 import { Viewport } from 'pixi-viewport'
 
 type OverflowScrollType = 'none' | 'scroll' | 'hidden' | 'auto'
@@ -34,14 +37,14 @@ interface ScrollBoxOptions {
     overflowY?: OverflowScrollType
     overflow?: OverflowScrollType
     noTicker?: boolean
-    ticker?: PIXI.Ticker
+    ticker?: Ticker
     divWheel?: HTMLElement
 }
 
 /**
  * pixi.js scrollbox: a masked content box that can scroll vertically or horizontally with scrollbars
  */
-export declare class Scrollbox extends PIXI.Container {
+export declare class Scrollbox extends Container {
     boxHeight: number
     boxWidth: number
     content: Viewport
@@ -55,7 +58,7 @@ export declare class Scrollbox extends PIXI.Container {
     overflow: string
     overflowX: string
     overflowY: string
-    scrollbar: PIXI.Graphics
+    scrollbar: Graphics
     scrollbarOffsetHorizontal: number
     scrollbarOffsetVertical: number
     scrollbarSize: number
@@ -101,12 +104,12 @@ export declare class Scrollbox extends PIXI.Container {
     /**
      * handle pointer down on scrollbar
      */
-    private scrollbarDown(e: PIXI.InteractionEvent): void
+    private scrollbarDown(e: InteractionEvent): void
 
     /**
      * handle pointer move on scrollbar
      */
-    private scrollbarMove(e: PIXI.InteractionEvent): void
+    private scrollbarMove(e: InteractionEvent): void
 
     /**
      * handle pointer down on scrollbar
