@@ -38,7 +38,11 @@
     "homepage": "https://github.com/davidfig/pixi-scrollbox#readme",
     "peerDependencies": {
         "pixi-viewport": ">=4.3.4",
-        "pixi.js": ">=6.0.0"
+        "@pixi/display": ">=6.0.0",
+        "@pixi/graphics": ">=6.0.0",
+        "@pixi/interaction": ">=6.0.0",
+        "@pixi/math": ">=6.0.0",
+        "@pixi/ticker": ">=6.0.0"
     },
     "dependencies": {
         "penner": "^0.1.3"
