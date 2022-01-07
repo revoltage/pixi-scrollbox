@@ -340,14 +340,6 @@ class Scrollbox extends Container {
         if (options.ticker) {
             this.options.ticker = options.ticker;
         }
-        else {
-            // to avoid Rollup transforming our import, save pixi namespace in a variable
-            // from here: https://github.com/pixijs/js/issues/5757
-            let ticker;
-            const pixiNS = PIXI;
-            ticker = pixiNS.Ticker.shared;
-            this.options.ticker = options.ticker || ticker;
-        }
 
         /**
          * graphics element for drawing the scrollbars
